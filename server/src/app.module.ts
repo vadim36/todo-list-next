@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import {ConfigModule} from '@nestjs/config'
 import { UsersModule } from './users/users.module';
 import { DbModule } from './db/db.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -9,7 +10,8 @@ import { DbModule } from './db/db.module';
       envFilePath: '.env'
     }),
     UsersModule,
-    DbModule
+    DbModule,
+    AuthModule
   ]
 })
 export default class AppModule {}

@@ -15,7 +15,4 @@ export default class CreateUserDto implements Partial<UserModel> {
   @IsString({message: 'password must be a string'})
   @Length(3, 24, {message: 'password must be longer than 3 and less and 24'})
   password: string;
-  @ApiProperty({description: 'a token', example: 'uuid'})
-  @IsString({message: 'token must be a string'})
-  refreshToken: string;
 }

@@ -21,4 +21,8 @@ export default class UpdateUserDto implements Partial<UserModel> {
   @Length(3, 24, {message: 'password must be longer than 3 and less and 24'})
   @IsOptional()
   password?: string;
+  @ApiProperty({description: 'a token', example: 'uuid'})
+  @IsString({message: 'token must be a string'})
+  @IsOptional()
+  refreshToken: string;
 }

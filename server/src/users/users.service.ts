@@ -10,11 +10,8 @@ export class UsersService {
   constructor(private prismaService: PrismaService) {}
   
   async createUser(userDto: CreateUserDto):Promise<UserModel> {
-    const candidate = await this.prismaService.user.findFirst({
-      where: { OR: [
-        { email: userDto.email },
-        { refreshToken: userDto.refreshToken }
-      ]},
+    const candidate = await this.prismaService.user.findUnique({
+      where: { email: userDto.email },
       include: {tasks: { include: { user: true }}}
     })
 
@@ -29,8 +26,8 @@ export class UsersService {
   }
 
   async getUserById(id: string):Promise<UserModel> {
-    const user = await this.prismaService.user.findUnique({
-      where: {userId: id},
+    const user = await this.prismaService.user.findFirst({
+      where: {OR: [{userId: id},{email: id}]},
       include: {tasks: { include: {user: true}}}
     })
 
