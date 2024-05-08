@@ -25,9 +25,7 @@ export class TokensService {
       })
     ])
 
-    const tokenFromDB = await this.DBService.refreshToken.create({
-      data: { tokenBody: refreshToken, user: { connect: { userId: payload.userId }}}
-    })
+    const tokenFromDB = await this.refreshToken(payload.userId, refreshToken)
 
     return { accessToken, refreshToken: tokenFromDB }
   }
@@ -37,11 +35,7 @@ export class TokensService {
       where: {OR: [{userId: id}, {tokenId: id}]}
     })
 
-    if (!token) {
-      throw new HttpException('The token was not found', HttpStatus.BAD_REQUEST)
-    }
-
-    return token
+    return token ? token : null
   }
   
   async removeToken(id:string):Promise<void> {
@@ -50,5 +44,19 @@ export class TokensService {
     })
 
     if (!token) throw new UnauthorizedException()
+  }
+
+  private async refreshToken(userId: string, token: string) {
+    let tokenFromDB = await this.getRefreshToken(userId)
+    if (!tokenFromDB) {
+      return tokenFromDB = await this.DBService.refreshToken.create({
+        data: { tokenBody: token, user: { connect: { userId: userId }}}
+      })
+    }
+
+    return tokenFromDB = await this.DBService.refreshToken.update({
+      where: { userId },
+      data: { tokenBody: token }
+    })
   }
 }
