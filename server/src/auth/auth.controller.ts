@@ -5,6 +5,8 @@ import TokensDto from 'src/tokens/dto/tokens-dto';
 import CreateUserDto from 'src/users/dto/create-user-dto';
 import type { Response } from 'express';
 import SigninDto from './dto/signin-dto';
+import LogoutDto from './dto/logout-dto';
+import RefreshTokenDto from './dto/refresh-dto';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -36,6 +38,17 @@ export class AuthController {
     return tokens
   }
 
-  async logout() {}
-  async refresh() {}
+  @ApiOperation({summary: 'Log out a user'})
+  @ApiResponse({status: 201})
+  @Post('/logout')
+  async logout(@Body() userDto: LogoutDto):Promise<void> {
+    return await this.authService.logout(userDto.userId)
+  }
+
+  @ApiOperation({summary: 'Refresh an access token'})
+  @ApiResponse({status: 201})
+  @Post('/refresh')
+  async refresh(@Body() tokenDto: RefreshTokenDto) {
+    return await this.authService.refresh(tokenDto.refreshToken)
+  }
 }

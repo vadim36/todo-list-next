@@ -27,7 +27,7 @@ export class TokensService {
 
     const tokenFromDB = await this.refreshToken(payload.userId, refreshToken)
 
-    return { accessToken, refreshToken: tokenFromDB }
+    return { accessToken, refreshToken: tokenFromDB, user: {...payload} }
   }
 
   async getRefreshToken(id: string):Promise<RefreshTokenModel> {
@@ -46,7 +46,15 @@ export class TokensService {
     if (!token) throw new UnauthorizedException()
   }
 
-  private async refreshToken(userId: string, token: string) {
+  validateRefreshToken(refreshToken: string):UserPayload {
+    const payload = this.jwtService.verify(refreshToken.toString(), {
+      secret: process.env.REFRESH_TOKEN_SIGNATURE
+    })
+    if (!payload) throw new UnauthorizedException()
+    return payload
+  }
+
+  async refreshToken(userId: string, token: string) {
     let tokenFromDB = await this.getRefreshToken(userId)
     if (!tokenFromDB) {
       return tokenFromDB = await this.DBService.refreshToken.create({
