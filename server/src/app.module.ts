@@ -4,6 +4,7 @@ import { DbModule } from './db/db.module';
 import { UsersModule } from './users/users.module';
 import { TokensModule } from './tokens/tokens.module';
 import { AuthModule } from './auth/auth.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { AuthModule } from './auth/auth.module';
     DbModule,
     UsersModule,
     TokensModule,
-    AuthModule
+    AuthModule,
+    TasksModule
   ]
 })
 export default class AppModule {}

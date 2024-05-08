@@ -28,6 +28,7 @@ export class AuthController {
 
   @ApiOperation({summary: 'Sign in a user'})
   @ApiResponse({status: 201, type: TokensDto})
+  @UsePipes(ValidationPipe)
   @Post('/signin')
   async signin(
     @Body() userDto: SigninDto, 
@@ -40,6 +41,7 @@ export class AuthController {
 
   @ApiOperation({summary: 'Log out a user'})
   @ApiResponse({status: 201})
+  @UsePipes(ValidationPipe)
   @Post('/logout')
   async logout(@Body() userDto: LogoutDto):Promise<void> {
     return await this.authService.logout(userDto.userId)
@@ -47,6 +49,7 @@ export class AuthController {
 
   @ApiOperation({summary: 'Refresh an access token'})
   @ApiResponse({status: 201})
+  @UsePipes(ValidationPipe)
   @Post('/refresh')
   async refresh(@Body() tokenDto: RefreshTokenDto) {
     return await this.authService.refresh(tokenDto.refreshToken)
