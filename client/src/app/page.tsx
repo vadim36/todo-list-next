@@ -1,7 +1,5 @@
-import { FC } from "react";
+import { HomePage } from "@/pages/HomePage";
 
-const App: FC = () => {
-  return <h1>Trello clone</h1>
+export default function App() {
+  return <HomePage/>
 }
-
-export default App
