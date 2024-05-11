@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { AuthContext } from "@/shared/lib/context"
+import { AuthContext } from "@/shared"
 import { useContext } from "react"
 import Link from "next/link"
 
@@ -10,17 +10,19 @@ export function NavBar() {
 
   return (
     <nav className="flex gap-2">
-        {isAuth
-          ? (<>
-          <Button size="sm">Ваш аккаунт</Button>
-          <Button size="sm" onClick={() => setIsAuth(false)}>Выйти</Button>
-        </>)
-          : (<>
+      {isAuth 
+        ? <>
+            <Button size="sm" asChild>
+              <Link href="/account">Ваш аккаунт</Link>
+            </Button>
+            <Button size="sm" onClick={() => setIsAuth(false)}>Выйти</Button>
+        </> 
+        : <>
             <Button size="sm" onClick={() => setIsAuth(true)}>Войти</Button>
             <Button size="sm" asChild>
               <Link href="/signup">Зарегистрироваться</Link>
             </Button>
-        </>)
+        </>
       }
     </nav>
   )
