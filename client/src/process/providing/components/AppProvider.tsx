@@ -25,7 +25,7 @@ export function AppProvider({ children }: props) {
   if (isLoading) return <LoadingPage/>
   if (!isLoading && !isAuth && pathname !== '/signin') return <SignUpPage/>
   if (!isLoading && isAuth && pathname === '/signin' || pathname === '/signup') {
-    return replace('/')
+    replace('/')
   }
 
   return (
