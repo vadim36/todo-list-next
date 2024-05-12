@@ -6,9 +6,7 @@ export default function checkIsAuth(setIsAuth: Function, setUserDto: Function) {
   if (!accessToken || !user) {
     setIsAuth(false)
     return setUserDto(INITIAL_USER_STATE)
-  } 
-
-  
+  }
   setIsAuth(true)
   setUserDto(JSON.parse(user))
 }
