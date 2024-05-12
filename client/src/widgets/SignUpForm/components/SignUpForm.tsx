@@ -21,7 +21,7 @@ const INITIAL_STATE:TSignUp = {
 export function SignUpForm() {
   const [formData, setFormData] = useState<TSignUp>(INITIAL_STATE)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
-  const {setIsAuth} = useContext(AuthContext)
+  const {setIsAuth, setUserDto} = useContext(AuthContext)
   const {replace} = useRouter()
 
   async function submitHandler(event: FormEvent):Promise<void> {
@@ -32,10 +32,11 @@ export function SignUpForm() {
       const {repeatedPassword, ...signUpData} = parse(SignUpSchema, formData)
       const authData: IAuthPayload = await signUpUser(signUpData)
   
-      localStorage.setItem('user', JSON.stringify(authData.user))
+      localStorage.setItem('user', JSON.stringify(authData))
       localStorage.setItem('token', authData.accessToken)
       
       setIsAuth(true)
+      setUserDto(authData)
       setFormData(INITIAL_STATE)
 
       replace('/')

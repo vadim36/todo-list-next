@@ -33,7 +33,7 @@ export function SignInForm() {
       setUserDto(authPayload)
       
       localStorage.setItem('token', authPayload.accessToken)
-      localStorage.setItem('user', JSON.stringify(authPayload.user))
+      localStorage.setItem('user', JSON.stringify(authPayload))
       
       setFormData(INITIAL_FORM_STATE)
       return window.location.reload()

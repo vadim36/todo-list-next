@@ -1,3 +1,5 @@
+import { AccountPage } from "@/pages/AccountPage";
+
 export default function Account() {
-  return <h1>Аккаунт</h1>
+  return <AccountPage/>
 }
