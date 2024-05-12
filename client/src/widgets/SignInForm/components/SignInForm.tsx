@@ -53,7 +53,7 @@ export function SignInForm() {
       onSubmit={formHandler}
       className="border border-black rounded-md self-center p-2 flex flex-col gap-1"
     >
-      <strong>Войти {String(isAuth)}</strong>
+    <strong>Войти</strong>
       <Input type="email" placeholder="Введите email..."
         value={formData.email}
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
