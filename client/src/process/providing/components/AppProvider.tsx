@@ -4,6 +4,7 @@ import { ReactNode, useEffect, useState } from "react"
 import checkIsAuth from "../lib/checkIsAuth"
 import { SignUpPage } from "@/pages/SignUp"
 import { usePathname, useRouter } from "next/navigation"
+import { LoadingPage } from "@/pages/LoadingPage"
 
 interface props {
   children: ReactNode
@@ -21,7 +22,7 @@ export function AppProvider({ children }: props) {
     setIsLoading(false)
   }, [])
 
-  if (isLoading) return <h1>Loading</h1>
+  if (isLoading) return <LoadingPage/>
   if (!isLoading && !isAuth && pathname !== '/signin') return <SignUpPage/>
   if (!isLoading && isAuth && pathname === '/signin' || pathname === '/signup') {
     return replace('/')
