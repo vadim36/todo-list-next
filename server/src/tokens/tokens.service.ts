@@ -47,10 +47,18 @@ export class TokensService {
   }
 
   validateRefreshToken(refreshToken: string):UserPayload {
-    const payload = this.jwtService.verify(refreshToken.toString(), {
+    const payload: UserPayload = this.jwtService.verify(refreshToken.toString(), {
       secret: process.env.REFRESH_TOKEN_SIGNATURE
     })
+
     if (!payload) throw new UnauthorizedException()
+
+    const user = this.DBService.user.findUnique({
+      where: {userId: payload.userId}
+    })
+
+    if (!user) throw new UnauthorizedException()
+
     return payload
   }
 
