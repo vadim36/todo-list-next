@@ -1,3 +1,9 @@
+import { LoginForm } from "@/widgets/LoginForm";
+
 export function LoginPage() {
-  return <h1>Login Page</h1>
+  return (
+    <div className="p-2 flex flex-col">
+      <LoginForm/>
+    </div>
+  )
 }
