@@ -1,10 +1,9 @@
-import Link from "next/link";
+import { SignUpForm } from "@/widgets/SignUpForm";
 
 export function SignUpPage() {
   return (
-    <>
-     <h1>SignUp Page</h1>
-     <Link href="/login">Log in</Link>
-    </>
+    <div className="p-2 flex flex-col">
+      <SignUpForm/>
+    </div>
   )
 }
