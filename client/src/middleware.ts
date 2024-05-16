@@ -1,7 +1,9 @@
 import { cookies } from "next/headers";
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { API_URL, PAGES } from "./shared";
+
+const badGatewayObject: ApiError = {statusCode: 500, message: 'Bad gateway'}
 
 export default async function middleware(request: NextRequest) {
   const {url} = request
@@ -9,14 +11,24 @@ export default async function middleware(request: NextRequest) {
   const token: string | null = cookies().get('refreshToken')?.value || null
   
   const validateToken: ApiError | UserDto = 
-    await fetch(`${API_URL}/tokens/validate/${token}`)
-      .then((response: Response) => response.json())
+    token 
+      ? await fetch(`${API_URL}/tokens/validate/${token}`)
+        .then((response: Response) => response.json())
+        .catch(():ApiError => {
+          return {...badGatewayObject}
+        })
+      : {...badGatewayObject}
+
   const isValidToken: boolean = !('statusCode' in validateToken)
 
   const isAuth: boolean = token !== null && isValidToken
 
   if (!isAuthPage && !isAuth) {
     return NextResponse.redirect(new URL(PAGES.SIGN_UP, url))
+  }
+
+  if (isAuthPage && isAuth) {
+    return NextResponse.redirect(new URL(PAGES.HOME, url))
   }
 
   return NextResponse.next()
