@@ -1,4 +1,4 @@
-interface Tokens {
+interface AuthData {
   accessToken: string,
   refreshToken: string,
   user: UserDto
