@@ -22,7 +22,8 @@ export class AuthController {
     @Res({ passthrough: true}) response: Response
   ) {
     const tokens = await this.authService.signup(userDto)
-    response.cookie('refreshToken', tokens.refreshToken, { httpOnly: true })
+    response.cookie('refreshToken', tokens.refreshToken.tokenBody, { httpOnly: true })
+    response.cookie('accessToken', tokens.accessToken, { httpOnly: true })
     return tokens
   }
 
@@ -35,7 +36,8 @@ export class AuthController {
     @Res({ passthrough: true}) response: Response
   ) {
     const tokens = await this.authService.signin(userDto)
-    response.cookie('refreshToken', tokens.refreshToken, { httpOnly: true })
+    response.cookie('refreshToken', tokens.refreshToken.tokenBody, { httpOnly: true })
+    response.cookie('accessToken', tokens.accessToken, { httpOnly: true })
     return tokens
   }
 
@@ -43,7 +45,12 @@ export class AuthController {
   @ApiResponse({status: 201})
   @UsePipes(ValidationPipe)
   @Post('/logout')
-  async logout(@Body() userDto: LogoutDto):Promise<void> {
+  async logout(
+    @Body() userDto: LogoutDto,
+    @Res({passthrough: true}) response: Response
+  ):Promise<void> {
+    response.clearCookie('refreshToken')
+    response.clearCookie('accessToken')
     return await this.authService.logout(userDto.userId)
   }
 
