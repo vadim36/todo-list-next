@@ -18,10 +18,12 @@ export class TokensService {
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync({...payload}, {
-        secret: process.env.ACCESS_TOKEN_SIGNATURE
+        secret: process.env.ACCESS_TOKEN_SIGNATURE,
+        expiresIn: '24h'
       }),
       this.jwtService.signAsync({...payload}, {
-        secret: process.env.REFRESH_TOKEN_SIGNATURE
+        secret: process.env.REFRESH_TOKEN_SIGNATURE,
+        expiresIn: '30d'
       })
     ])
 
@@ -33,15 +35,9 @@ export class TokensService {
   }
 
   async getRefreshToken(id: string):Promise<RefreshTokenModel> {
-    const token = await this.DBService.refreshToken.findFirst({
+    return await this.DBService.refreshToken.findFirst({
       where: {OR: [{userId: id}, {tokenId: id}]}
     })
-
-    if (!token) {
-      throw new HttpException('The token was not found', HttpStatus.BAD_REQUEST)
-    }
-
-    return token
   }
   
   async removeToken(id:string):Promise<void> {

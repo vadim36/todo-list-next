@@ -9,9 +9,7 @@ export class UsersService {
   constructor (private DBService: DbService) {}
 
   async createUser(userDto: CreateUserDto):Promise<UserModel> {
-    const candidate = await this.DBService.user.findUnique({
-      where: { email: userDto.email }
-    })
+    const candidate = await this.getUserById(userDto.email)
 
     if (candidate) {
       throw new HttpException('Such user already exist', HttpStatus.BAD_REQUEST)
@@ -23,19 +21,18 @@ export class UsersService {
   }
 
   async getUserById(id: string):Promise<UserModel> {
-    const user = await this.DBService.user.findFirst({
+    return await this.DBService.user.findFirst({
       where: {OR: [{userId: id},{email: id}]},
     })
-
-    if (!user) {
-      throw new HttpException('The user was not found', HttpStatus.BAD_REQUEST)
-    }
-
-    return user
   }
 
   async updateUser(userDto: UpdateUserDto):Promise<UserModel> {
     const user = await this.getUserById(userDto.userId)
+
+    if (!user) {
+      throw new HttpException('Such user was not found', HttpStatus.BAD_REQUEST)
+    }
+
     return await this.DBService.user.update({
       where: { userId: user.userId },
       data: {...userDto}
