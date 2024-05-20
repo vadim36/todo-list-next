@@ -8,28 +8,21 @@ datasource db {
 }
 
 model User {
-  userId       String @id @default(uuid())
-  name         String
-  email        String @unique
-  password     String
-  refreshToken RefreshToken?
-  tasks        Task[]
-}
-
-model RefreshToken {
-  tokenId   String @id @default(uuid())
-  tokenBody String @unique
-  userId    String @unique
-  user      User?  @relation(fields: [userId], references: [userId])
+  userId         String @id @default(uuid())
+  name           String
+  email          String @unique
+  password       String
+  activationCode String
+  tasks          Task[]
 }
 
 model Task {
-  taskId  String   @id @default(uuid())
-  title   String
-  status  Statuses
-  content String
-  userId  String
-  user    User     @relation(fields: [userId], references: [userId])
+  taskId   String   @id @default(uuid())
+  name     String
+  body     String
+  status   Statuses
+  userId   String
+  user     User?    @relation(fields: [userId], references: [userId])
 }
 
 enum Statuses {
