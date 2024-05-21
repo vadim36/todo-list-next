@@ -12,15 +12,15 @@ model User {
   name           String
   email          String @unique
   password       String
-  activationCode String
+  activationCode String @default("")
   tasks          Task[]
 }
 
 model Task {
   taskId   String   @id @default(uuid())
   name     String
-  body     String
-  status   Statuses
+  body     String   @default("")
+  status   Statuses @default(Todo)
   userId   String
   user     User?    @relation(fields: [userId], references: [userId])
 }
