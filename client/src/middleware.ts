@@ -1,7 +1,7 @@
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 import {PAGES} from './shared'
-import validateAccessToken from "./shared/lib/validateAccessToken"
+import {validateAccessToken} from "./shared"
 
 export default async function middleware(request: NextRequest) {
   const {url} = request

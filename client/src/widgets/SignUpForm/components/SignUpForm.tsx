@@ -7,20 +7,28 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { PAGES } from "@/shared"
 import { ISignUpForm } from "../types"
-import { ValidationErrors } from "@/shared/components/ValidationErrors"
+import { ValidationErrors } from "@/shared"
 import { SignUpSchema } from "../lib/validation"
 import { ValiError, parse } from "valibot"
-import { mapValidationErrors } from "@/shared/lib/mapValidationErrors"
+import { mapValidationErrors } from "@/shared"
+import signUp from "../api/signUp"
+import { useRouter } from "next/navigation"
 
 export function SignUpForm() {
   const [formData, setFormData] = useState<ISignUpForm>(INITIAL_STATE)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
+  const {replace} = useRouter()
 
   async function submitHandler(event: FormEvent) {
     event.preventDefault()
     const signUpData = validateForm()
     if (!signUpData) return
+
+    const authData = await signUp(signUpData)
+    localStorage.setItem('accessToken', authData!.accessToken)
+
     setFormData(INITIAL_STATE)
+    return replace('/')
   }
 
   function validateForm():ISignUpForm | void {
