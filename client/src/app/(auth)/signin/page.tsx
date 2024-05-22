@@ -1,3 +1,5 @@
+import { SignInPage } from "@/pages/SignIn";
+
 export default function Sigin() {
-  return <h1>SiginPage</h1>
+  return <SignInPage/>
 }
