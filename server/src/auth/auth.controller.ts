@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import AuthDto from 'src/tokens/dto/auth-dto';
 import SigninDto from './dto/sign-in-dto';
 import RefreshDto from './dto/refresh-dto';
+import type { Response } from 'express';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -15,16 +16,26 @@ export class AuthController {
   @ApiResponse({status: 201, type: AuthDto})
   @UsePipes(ValidationPipe)
   @Post('/signup')
-  async signup(@Body() userDto: CreateUserDto):Promise<AuthDto> {
-    return await this.authService.signup(userDto)
+  async signup(
+    @Body() userDto: CreateUserDto,
+    @Res({passthrough: true}) response: Response
+  ):Promise<AuthDto> {
+    const authData: AuthDto = await this.authService.signup(userDto)
+    response.cookie('accessToken', authData.accessToken, {httpOnly: true})
+    return authData
   }
 
   @ApiOperation({summary: 'Sign in a user'})
   @ApiResponse({status: 201, type: AuthDto})
   @UsePipes(ValidationPipe)
   @Post('/signin')
-  async signin(@Body() userDto: SigninDto):Promise<AuthDto> {
-    return await this.authService.signin(userDto)
+  async signin(
+    @Body() userDto: SigninDto,
+    @Res({passthrough: true}) response: Response
+  ):Promise<AuthDto> {
+    const authData: AuthDto = await this.authService.signin(userDto)
+    response.cookie('accessToken', authData.accessToken, {httpOnly: true})
+    return authData
   }
 
   @ApiOperation({summary: 'Refresh tokens'})

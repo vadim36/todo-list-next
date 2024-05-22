@@ -23,9 +23,14 @@ export class AuthService {
   async signin(userDto: SigninDto):Promise<AuthDto> {
     const user = await this.usersService.getUserById(userDto.email)
     const isPasswordEqual = await bcrypt.compare(userDto.password, user.password)
-    if (!user || !isPasswordEqual) {
+    if (!user) {
       throw new HttpException('The user was not found', HttpStatus.BAD_REQUEST)
     }
+    
+    if (!isPasswordEqual) {
+      throw new HttpException('The wrong password', HttpStatus.BAD_REQUEST)
+    }
+
     return await this.tokensService.generateTokens(user)
   }
 
