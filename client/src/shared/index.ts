@@ -1,0 +1,1 @@
+export {PAGES} from './config/pages-url.config'

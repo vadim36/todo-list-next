@@ -40,4 +40,8 @@ export class AuthService {
     const user = await this.usersService.getUserById(payload.userId)
     return await this.tokensService.generateTokens(user)
   }
+
+  validateAccessToken(token: string):boolean {
+    return this.tokensService.validateAccessToken(token)
+  }
 }

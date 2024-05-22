@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import CreateUserDto from 'src/users/dto/create-user-dto';
 import { AuthService } from './auth.service';
@@ -44,5 +44,12 @@ export class AuthController {
   @Post('/refresh')
   async refresh(@Body() tokenDto: RefreshDto):Promise<AuthDto | never> {
     return await this.authService.refresh(tokenDto.refreshToken)
+  }
+
+  @ApiOperation({summary: 'Validate an access token'})
+  @ApiResponse({status: 200})
+  @Get('/validate/:token')
+  validateAccessToken(@Param('token') token: string):boolean {
+    return this.authService.validateAccessToken(token)
   }
 }
