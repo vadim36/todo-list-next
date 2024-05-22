@@ -23,6 +23,7 @@ export function SignInForm() {
 
     const authData = await signIn(signInData)
     localStorage.setItem('accessToken', authData!.accessToken)
+    localStorage.setItem('refreshToken', authData!.refreshToken)
 
     setFormData(INITIAL_STATE)
     return replace('/')

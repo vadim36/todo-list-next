@@ -17,7 +17,9 @@ $api.interceptors.response.use((config) => config, async (error) => {
   if (error.response?.status === 401 && originalRequest && !originalRequest._isRetry) {
     originalRequest._isRetry = true
     try {
-      await axios.get(`${API_URL}/auth/refresh`, { withCredentials: true })
+      await axios.post(`${API_URL}/auth/refresh`, {
+        refreshToken: localStorage.getItem('refreshToken')
+      }, { withCredentials: true })
       return $api.request(originalRequest!)
     } catch {
       console.log('Do not auth')

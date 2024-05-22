@@ -46,6 +46,14 @@ export class AuthController {
     return await this.authService.refresh(tokenDto.refreshToken)
   }
 
+  @ApiOperation({summary: 'Log out a user'})
+  @ApiResponse({status: 201})
+  @Post('/logout')
+  logout(@Res({passthrough: true}) response: Response) {
+    response.clearCookie('accessToken')
+    return 'ok'
+  }
+
   @ApiOperation({summary: 'Validate an access token'})
   @ApiResponse({status: 200})
   @Get('/validate/:token')
