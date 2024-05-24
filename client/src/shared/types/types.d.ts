@@ -1,7 +1,7 @@
 interface AuthData {
   accessToken: string,
   refreshToken: string,
-  user: UserDto
+  payload: UserDto
 }
 
 interface UserDto {

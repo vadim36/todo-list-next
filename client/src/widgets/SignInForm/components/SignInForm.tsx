@@ -8,8 +8,8 @@ import { ValidationErrors, mapValidationErrors } from "@/shared"
 import {ISignInForm} from '../types'
 import { ValiError, parse } from "valibot"
 import { SignInSchema } from "../lib/validation"
-import signIn from "../api/signIn"
 import { useRouter } from "next/navigation"
+import signIn from "../api/signIn"
 
 export function SignInForm() {
   const [formData, setFormData] = useState(INITIAL_STATE)
@@ -21,9 +21,10 @@ export function SignInForm() {
     const signInData = validateForm()
     if (!signInData) return
 
-    const authData = await signIn(signInData)
-    localStorage.setItem('accessToken', authData!.accessToken)
-    localStorage.setItem('refreshToken', authData!.refreshToken)
+    const authData: AuthData = await signIn(signInData)
+    localStorage.setItem('user', JSON.stringify(authData.payload))
+    localStorage.setItem('accessToken', authData.accessToken)
+    localStorage.setItem('refreshToken', authData.refreshToken)
 
     setFormData(INITIAL_STATE)
     return replace('/')
@@ -46,19 +47,19 @@ export function SignInForm() {
       className="border border-black rounded-md self-center p-2 flex flex-col gap-1"
       onSubmit={submitHandler}
     >
-      <strong>Войти</strong>
+      <strong>Sign In</strong>
       <Input 
         value={formData.email}
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
           return setFormData({...formData, email: event.target.value})
         }}
-        type="email" placeholder="Введите email..."/>
+        type="email" placeholder="Your email..."/>
       <Input 
         value={formData.password}
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
           return setFormData({...formData, password: event.target.value})
         }}
-        type="password" placeholder="Введите пароль..."/>
+        type="password" placeholder="Your password..."/>
       <Button>Войти</Button>
       <ValidationErrors validationArray={validationErrors}/>
     </form>

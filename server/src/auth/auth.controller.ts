@@ -6,6 +6,7 @@ import AuthDto from 'src/tokens/dto/auth-dto';
 import SigninDto from './dto/sign-in-dto';
 import RefreshDto from './dto/refresh-dto';
 import type { Response } from 'express';
+import UserDto from './dto/user-dto';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -22,6 +23,8 @@ export class AuthController {
   ):Promise<AuthDto> {
     const authData: AuthDto = await this.authService.signup(userDto)
     response.cookie('accessToken', authData.accessToken, {httpOnly: true})
+    response.cookie('refreshToken', authData.refreshToken, {httpOnly: true})
+    response.cookie('userId', authData.payload.userId, {httpOnly: true})
     return authData
   }
 
@@ -35,6 +38,8 @@ export class AuthController {
   ):Promise<AuthDto> {
     const authData: AuthDto = await this.authService.signin(userDto)
     response.cookie('accessToken', authData.accessToken, {httpOnly: true})
+    response.cookie('refreshToken', authData.refreshToken, {httpOnly: true})
+    response.cookie('userId', authData.payload.userId, {httpOnly: true})
     return authData
   }
 
@@ -51,13 +56,14 @@ export class AuthController {
   @Post('/logout')
   logout(@Res({passthrough: true}) response: Response) {
     response.clearCookie('accessToken')
+    response.clearCookie('refreshToken')
     return 'ok'
   }
 
   @ApiOperation({summary: 'Validate an access token'})
   @ApiResponse({status: 200})
   @Get('/validate/:token')
-  validateAccessToken(@Param('token') token: string):boolean {
+  validateAccessToken(@Param('token') token: string):UserDto | false {
     return this.authService.validateAccessToken(token)
   }
 }

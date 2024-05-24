@@ -1,8 +1,9 @@
-import { $api } from "@/shared";
+import {$apiClient} from "@/shared/http";
 import { ISignInForm } from "../types";
+import { ApiMethods } from "@/shared/http/helpers";
 
-export default async function signIn(data: ISignInForm) {
-  return await $api.post<AuthData>('/auth/signin', {...data})
-    .then((response) => response.data)
-    .catch((error) => console.log(error))
+export default async function signIn(signInData: ISignInForm):Promise<AuthData> {
+  return await $apiClient<ISignInForm, AuthData>({ 
+    path: '/auth/signin', method: ApiMethods.POST, data: signInData 
+  }).then((response) => response.data)
 }

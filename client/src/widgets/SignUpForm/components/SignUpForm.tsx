@@ -24,9 +24,10 @@ export function SignUpForm() {
     const signUpData = validateForm()
     if (!signUpData) return
 
-    const authData = await signUp(signUpData)
-    localStorage.setItem('accessToken', authData!.accessToken)
-    localStorage.setItem('refreshToken', authData!.refreshToken)
+    const authData: AuthData = await signUp(signUpData)
+    localStorage.setItem('user', JSON.stringify(authData.payload))
+    localStorage.setItem('accessToken', authData.accessToken)
+    localStorage.setItem('refreshToken', authData.refreshToken)
 
     setFormData(INITIAL_STATE)
     return replace('/')

@@ -1,6 +1,5 @@
-import { $api } from "@/shared";
-import { AxiosResponse } from "axios";
+import { $apiClient, ApiMethods } from "@/shared/http";
 
-export default async function logout():Promise<void | AxiosResponse> {
-  return await $api.post('/auth/logout').catch(() => alert('Something went wrong'))
+export default async function logout() {
+  return await $apiClient({ path: '/auth/logout', method: ApiMethods.POST})
 }

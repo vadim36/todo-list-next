@@ -26,13 +26,11 @@ export class TokensService {
     return { accessToken, refreshToken, payload: {...payload} }
   }
 
-  validateAccessToken(token: string):boolean {
+  validateAccessToken(token: string):UserDto | false {
     try {
-      this.jwtService.verify(token, {
+      return this.jwtService.verify<UserDto>(token, {
         secret: process.env.ACCESS_TOKEN_SIGNATURE
       })
-
-      return true
     } catch {
       return false
     }

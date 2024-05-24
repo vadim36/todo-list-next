@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 import TaskModel from 'src/models/task.model';
 import CreateTaskDto from './dto/create-task-dto';
 import TaskParams from './dto/task-params';
 import UpdateTaskDto from './dto/update-task-dto';
+import { AuthGuard } from 'src/auth/auth-guard';
 
 @ApiTags('Tasks')
 @Controller('tasks')
@@ -21,6 +22,7 @@ export class TasksController {
   
   @ApiOperation({summary: 'Getting a user`s tasks'})
   @ApiResponse({status: 200, type: [TaskModel]})
+  @UseGuards(AuthGuard)
   @Get('/:userId')
   async getAllTask(@Param('userId') userId: string):Promise<TaskModel[]> {
     return await this.tasksService.getAllTasks(userId)

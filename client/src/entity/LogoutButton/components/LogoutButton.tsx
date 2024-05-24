@@ -10,9 +10,9 @@ export function LogoutButton() {
   return <Button onClick={async () => {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
+    localStorage.removeItem('user')
 
     await logout()
-    
     return await replace('/signup')
   }} size="sm">Выйти</Button>
 }

@@ -41,7 +41,7 @@ export class AuthService {
     return await this.tokensService.generateTokens(user)
   }
 
-  validateAccessToken(token: string):boolean {
+  validateAccessToken(token: string):UserDto | false {
     return this.tokensService.validateAccessToken(token)
   }
 }
