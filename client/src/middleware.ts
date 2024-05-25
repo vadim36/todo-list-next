@@ -1,10 +1,20 @@
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
-import {PAGES} from './shared'
+import {PAGES, checkNetwork} from './shared'
 import {validateAccessToken} from "./shared"
 
 export default async function middleware(request: NextRequest) {
   const {url} = request
+
+  const isNetwork: boolean = await checkNetwork()
+  const isNetworkPage: boolean = url.includes(PAGES.BAD_NETWORK)
+
+  if (!isNetwork && !isNetworkPage) {
+    return NextResponse.redirect(new URL(PAGES.BAD_NETWORK, url))
+  }
+
+  if (!isNetwork && isNetworkPage) return NextResponse.next()
+
   const isAuthPage: boolean = url.includes(PAGES.SIGN_UP) || url.includes(PAGES.SIGN_IN)
   const accessToken: string | null = cookies().get('accessToken')?.value || null
   const isTokenValid = await validateAccessToken(accessToken)

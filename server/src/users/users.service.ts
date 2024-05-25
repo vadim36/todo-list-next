@@ -3,6 +3,7 @@ import CreateUserDto from './dto/create-user-dto';
 import UserModel from 'src/models/user.model';
 import UpdateUserDto from './dto/update-user-dto';
 import { DbService } from 'src/db/db.service';
+import UserPayload from 'src/tokens/user-payload';
 
 @Injectable()
 export class UsersService {
@@ -25,15 +26,16 @@ export class UsersService {
     }) || null
   }
 
-  async updateUser(userDto: UpdateUserDto):Promise<UserModel> {
+  async updateUser(userDto: UpdateUserDto):Promise<UserPayload> {
     const candidate = await this.getUserById(userDto.userId)
     if (!candidate) {
       throw new HttpException('The user was not found', HttpStatus.BAD_REQUEST)
     }
 
-    return await this.DbService.user.update({
+    const user = await this.DbService.user.update({
       where: { userId: candidate.userId },
       data: {...userDto}
     })
+    return new UserPayload(user)
   }
 }

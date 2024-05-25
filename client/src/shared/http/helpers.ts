@@ -1,6 +1,7 @@
 export enum ApiMethods {
   GET = 'get',
   POST = 'post',
+  PUT = 'put'
 }
 
 export interface ApiProps<T> {

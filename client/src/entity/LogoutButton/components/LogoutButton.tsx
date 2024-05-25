@@ -14,5 +14,5 @@ export function LogoutButton() {
 
     await logout()
     return await replace('/signup')
-  }} size="sm">Выйти</Button>
+  }} size="sm">Log out</Button>
 }

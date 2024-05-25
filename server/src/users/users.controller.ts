@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import UserModel from 'src/models/user.model';
 import CreateUserDto from './dto/create-user-dto';
 import UpdateUserDto from './dto/update-user-dto';
+import UserPayload from 'src/tokens/user-payload';
 
 @ApiTags('Users')
 @Controller('users')
@@ -29,7 +30,7 @@ export class UsersController {
   @ApiResponse({status: 201, type: UserModel})
   @UsePipes(ValidationPipe)
   @Put()
-  async updateUser(@Body() userDto: UpdateUserDto):Promise<UserModel> {
+  async updateUser(@Body() userDto: UpdateUserDto):Promise<UserPayload> {
     return await this.usersService.updateUser(userDto)
   }
 }
