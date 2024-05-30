@@ -24,6 +24,11 @@ export async function $apiClient<T, R>({
         withCredentials: true,
         headers: authHeaders
       }).catch(handleError<R>)
+    case ApiMethods.DELETE:
+      return await axios.delete(url, { 
+        withCredentials: true,
+        headers: authHeaders
+      }).catch(handleError<R>)  
     default:
       return await axios.get(url, { 
         withCredentials: true,

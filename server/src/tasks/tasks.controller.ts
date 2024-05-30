@@ -15,6 +15,7 @@ export class TasksController {
   @ApiOperation({summary: 'Create a new task'})
   @ApiResponse({status: 201, type: TaskModel})
   @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
   @Post()
   async createTask(@Body() taskDto: CreateTaskDto):Promise<TaskModel> {
     return await this.tasksService.createTask(taskDto)
@@ -31,6 +32,7 @@ export class TasksController {
   @ApiOperation({summary: 'Getting a specific user`s task'})
   @ApiResponse({status: 200, type: TaskModel})
   @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
   @Get('/:userId/:taskId')
   async getTask(@Param() params: TaskParams):Promise<TaskModel> {
     return await this.tasksService.getTask(params)
@@ -39,6 +41,7 @@ export class TasksController {
   @ApiOperation({summary: 'Update a specific user`s task'})
   @ApiResponse({status: 201, type: TaskModel})
   @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
   @Put()
   async updateTask(@Body() taskDto: UpdateTaskDto):Promise<TaskModel> {
     return await this.tasksService.updateTask(taskDto)
@@ -47,6 +50,7 @@ export class TasksController {
   @ApiOperation({summary: 'Delete all user`s tasks'})
   @ApiResponse({status: 201})
   @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
   @Delete('/:userId')
   async removeTasks(@Param('userId') userId: string) {
     return await this.tasksService.removeTasks(userId)
@@ -55,6 +59,7 @@ export class TasksController {
   @ApiOperation({summary: 'Delete a specific user`s task'})
   @ApiResponse({status: 201, type: TaskModel})
   @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
   @Delete('/:userId/:taskId')
   async removeTask(@Param() params: TaskParams):Promise<TaskModel> {
     return await this.tasksService.removeTask(params)
