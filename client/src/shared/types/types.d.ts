@@ -9,3 +9,8 @@ interface UserDto {
   name: string,
   email: string
 }
+
+interface ApiError {
+  statusCode: number,
+  message: string
+}

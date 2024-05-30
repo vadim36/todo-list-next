@@ -1,14 +1,17 @@
 import { $apiServer } from "@/shared/http/index"
+import { ITask, Task } from "@/entity/Task"
+import { cookies } from "next/headers"
 
 export async function TasksList() {
-  const tasks: any = await $apiServer({ 
-    path: '/tasks/bb95f47b-531d-4e24-9833-6a0bdac53b76' 
+  const userId = cookies().get('userId')?.value
+  const tasks = await $apiServer<{}, ITask[]>({ 
+    path: `/tasks/${userId}`
   }).then((response) => response.data)
 
   return (
     <>
       <h2 className="font-semibold text-xl">Your tasks:</h2>
-      <p>TASKS HERE ====== {JSON.stringify(tasks)}</p>
+      <ul>{tasks.map((task: ITask) => <Task data={task}/>)}</ul>
     </>
   )
 }

@@ -10,6 +10,7 @@ import { ValiError, parse } from "valibot"
 import { SignInSchema } from "../lib/validation"
 import { useRouter } from "next/navigation"
 import signIn from "../api/signIn"
+import { AxiosError } from "axios"
 
 export function SignInForm() {
   const [formData, setFormData] = useState(INITIAL_STATE)
@@ -21,13 +22,17 @@ export function SignInForm() {
     const signInData = validateForm()
     if (!signInData) return
 
-    const authData: AuthData = await signIn(signInData)
-    localStorage.setItem('user', JSON.stringify(authData.payload))
-    localStorage.setItem('accessToken', authData.accessToken)
-    localStorage.setItem('refreshToken', authData.refreshToken)
-
-    setFormData(INITIAL_STATE)
-    return replace('/')
+    try {
+      const authData: AuthData = await signIn(signInData)
+      localStorage.setItem('user', JSON.stringify(authData.payload))
+      localStorage.setItem('accessToken', authData.accessToken)
+      localStorage.setItem('refreshToken', authData.refreshToken)
+  
+      setFormData(INITIAL_STATE)
+      return replace('/')
+    } catch (error: unknown) {
+      return alert((error as AxiosError<ApiError>).response?.data.message ?? 'Unexpected error')
+    }
   }
 
   function validateForm():ISignInForm | void {
