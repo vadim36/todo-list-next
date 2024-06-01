@@ -3,11 +3,11 @@
 import axios, { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
 import { API_URL, ApiMethods, ApiProps } from "./helpers";
 
-export async function $apiClient<T, R>({
+export async function $apiClient<TRequestBody, TResponse>({
   method = ApiMethods.GET,
   path,
   data
-}: ApiProps<T>):Promise<AxiosResponse<R>> {
+}: ApiProps<TRequestBody>):Promise<AxiosResponse<TResponse>> {
   const url: string = `${API_URL}${path}`
   const authHeaders = new AxiosHeaders({
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`
@@ -18,26 +18,26 @@ export async function $apiClient<T, R>({
       return await axios.post(url, {...data || {}}, { 
         withCredentials: true,
         headers: authHeaders
-      }).catch(handleError<R>)
+      }).catch(handleError<TResponse>)
     case ApiMethods.PUT:
       return await axios.put(url, {...data || {}}, { 
         withCredentials: true,
         headers: authHeaders
-      }).catch(handleError<R>)
+      }).catch(handleError<TResponse>)
     case ApiMethods.DELETE:
       return await axios.delete(url, { 
         withCredentials: true,
         headers: authHeaders
-      }).catch(handleError<R>)  
+      }).catch(handleError<TResponse>)  
     default:
       return await axios.get(url, { 
         withCredentials: true,
         headers: authHeaders
-      }).catch(handleError<R>)
+      }).catch(handleError<TResponse>)
   }
 }
 
-async function handleError<T>(error: AxiosError):Promise<AxiosResponse<T>> {
+async function handleError<TResponse>(error: AxiosError):Promise<AxiosResponse<TResponse>> {
   const originalRequest: any = error.config
         
   if (error.response?.status === 401 && originalRequest && !originalRequest._isRetry) {

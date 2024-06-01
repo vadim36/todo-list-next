@@ -5,10 +5,12 @@ export enum ApiMethods {
   DELETE = 'delete'
 }
 
-export interface ApiProps<T> {
+export interface ApiProps<TRequestBody> {
   method?: ApiMethods,
   path: string,
-  data?: T
+  data?: TRequestBody,
+  cache?: RequestCache,
+  revalidate?: number | false
 }
 
 export const API_URL: string = 'http://localhost:7000'
