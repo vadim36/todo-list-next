@@ -22,6 +22,7 @@ export class TasksService {
         name: taskDto.name,
         body: taskDto.body ?? '',
         status: $Enums.Statuses.Todo,
+        iat: String(Date.now()),
         user: { connect: { userId: user.userId}}
       }
     })
@@ -31,7 +32,8 @@ export class TasksService {
     const user = await this.usersService.getUserById(userId)
     if (!user) throw new UnauthorizedException() 
     return await this.DBService.task.findMany({
-      where: { userId: user.userId }
+      where: { userId: user.userId },
+      orderBy: { iat: "asc" }
     })
   }
 

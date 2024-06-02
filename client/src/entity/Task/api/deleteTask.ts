@@ -1,14 +1,10 @@
-"use server"
+"use client"
 
-import { $apiServer, ApiMethods } from "@/shared/http";
+import { $apiClient, ApiMethods } from "@/shared/http";
 import { TaskRequest } from "../types";
-import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 
 export async function deleteTask(taskId: string) {
-  const userId = cookies().get('userId')?.value
+  const userId: string = (JSON.parse(localStorage.getItem('user')!) as UserDto).userId
 
-  await $apiServer<TaskRequest, {}>({ path: `/tasks/${userId}/${taskId}`, method: ApiMethods.DELETE})
-
-  return revalidatePath('/')
+  await $apiClient<TaskRequest, {}>({ path: `/tasks/${userId}/${taskId}`, method: ApiMethods.DELETE})
 }

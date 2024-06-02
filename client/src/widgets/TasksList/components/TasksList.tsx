@@ -1,21 +1,37 @@
-import { $apiServer } from "@/shared/http/index"
-import { ITask, Task } from "@/entity/Task"
-import { cookies } from "next/headers"
-import { AddTaskForm } from "@/entity/AddTaskForm"
+"use client"
 
-export async function TasksList() {
-  const userId = cookies().get('userId')?.value
-  const tasks = await $apiServer<{}, ITask[]>({ 
-    path: `/tasks/${userId}`
-  }).then((response) => response.data)
+import { ITask, Task } from "@/entity/Task"
+import { AddTaskForm } from "@/entity/AddTaskForm"
+import getTasks from "../api/getTasks"
+import { useMemo, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { Loader } from "@/shared"
+
+export function TasksList() {
+  const [tasks, setTasks] = useState<ITask[]>([])
+
+  const {isLoading, error, data} = useQuery({
+    queryKey: ['todos'],
+    queryFn: async() => {
+      const response = await getTasks()
+      setTasks(response)
+      return response
+    }
+  })
 
   return (
     <>
       <h2 className="font-semibold text-xl">Your tasks:</h2>
+      {isLoading && <Loader/>}
+      {error && <h2>Something went wrong...</h2>}
       <ul className="gap-2 flex flex-col">
-        {tasks.map((task: ITask) => <Task key={task.taskId} data={task}/>)}
+        {tasks.map((task: ITask) => <Task 
+          tasks={tasks}
+          setTasks={setTasks}
+          key={task.taskId} 
+          data={task}/>)}
       </ul>
-      <AddTaskForm/>
+      <AddTaskForm tasks={tasks} setTasks={setTasks}/>
     </>
   )
 }

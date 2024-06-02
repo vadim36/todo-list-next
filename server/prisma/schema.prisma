@@ -21,6 +21,7 @@ model Task {
   name     String
   body     String   @default("")
   status   Statuses @default(Todo)
+  iat      String 
   userId   String
   user     User?    @relation(fields: [userId], references: [userId])
 }

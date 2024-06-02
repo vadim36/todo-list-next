@@ -1,14 +1,11 @@
-"use server"
+"use client"
 
-import { $apiServer, ApiMethods } from "@/shared/http";
+import { $apiClient, ApiMethods } from "@/shared/http";
 import { ICreateTask } from "../types";
 import { ITask } from "@/entity/Task";
-import { revalidatePath } from "next/cache";
 
 export async function createTask(createTaskData: ICreateTask):Promise<any> {
-  await $apiServer<ICreateTask, ITask>(
+  return await $apiClient<ICreateTask, ITask>(
     {path: '/tasks', method: ApiMethods.POST, data: createTaskData}
-  )
-
-  return revalidatePath('/')
+  ).then((response) => response.data)
 }

@@ -12,4 +12,6 @@ export default class TaskModel implements Task {
   status: $Enums.Statuses;
   @ApiProperty({description: 'an owner id', example: 'uuid'})
   userId: string;
+  @ApiProperty({description: 'a datestamp', example: 'datestamp'})
+  iat: string;
 }

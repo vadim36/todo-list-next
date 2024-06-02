@@ -1,16 +1,22 @@
 "use client"
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { AddTaskButton } from "./AddTaskButton";
 import { PseudoTask } from "./PseudoTask";
+import { ITask } from "@/entity/Task";
 
-export function AddTaskForm() {
+interface Props {
+  tasks: ITask[],
+  setTasks: Dispatch<SetStateAction<ITask[]>>
+}
+
+export function AddTaskForm({ tasks, setTasks }: Props) {
   const [isPseudoTask, setIsPseudoTask] = useState<boolean>(false)
   
   return (
     <div className="mt-2">
       {isPseudoTask 
-        ? <PseudoTask setIsPseudoTask={setIsPseudoTask}/> 
+        ? <PseudoTask setTasks={setTasks} tasks={tasks} setIsPseudoTask={setIsPseudoTask}/> 
         : <AddTaskButton setIsPseudoTask={setIsPseudoTask}/>
       }
     </div>

@@ -8,9 +8,12 @@ import { ICreateTask } from "../types";
 import { CreateTaskSchema } from "../lib/validation";
 import { ValiError, parse } from "valibot";
 import { ValidationErrors } from "@/shared";
+import { ITask } from "@/entity/Task";
 
 interface Props {
-  setIsPseudoTask: Dispatch<SetStateAction<boolean>>
+  setIsPseudoTask: Dispatch<SetStateAction<boolean>>,
+  setTasks: Dispatch<SetStateAction<ITask[]>>,
+  tasks: ITask[]
 }
 
 const INITIAL_STATE: Omit<ICreateTask, 'userId'> = {
@@ -18,7 +21,7 @@ const INITIAL_STATE: Omit<ICreateTask, 'userId'> = {
   body: ''
 }
 
-export function PseudoTask({setIsPseudoTask}: Props) {
+export function PseudoTask({setIsPseudoTask, setTasks, tasks}: Props) {
   const [formData, setFormData] = useState<Omit<ICreateTask, 'userId'>>(INITIAL_STATE)
   const user: UserDto = JSON.parse(localStorage.getItem('user')!)
   const {userId} = user
@@ -33,8 +36,9 @@ export function PseudoTask({setIsPseudoTask}: Props) {
     event.preventDefault()
     const createTaskData = validateForm()
     if (!createTaskData) return
-    await createTask({...createTaskData, userId})
-    return setIsPseudoTask(false) 
+    const newTask = await createTask({...createTaskData, userId})
+    setIsPseudoTask(false) 
+    return setTasks([...tasks, {...newTask}])
   }
 
   function validateForm():Omit<ICreateTask, 'userId'> | void {
