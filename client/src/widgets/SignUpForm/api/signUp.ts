@@ -3,6 +3,6 @@ import { ISignUpForm } from "../types";
 
 export default async function signUp(data: ISignUpForm):Promise<AuthData> {
   return await $apiClient<ISignUpForm, AuthData>({ 
-    path: '/auth/signin', method: ApiMethods.POST, data
+    path: '/auth/signup', method: ApiMethods.POST, data
   }).then((response) => response.data)
 }

@@ -2,6 +2,7 @@ import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 import {PAGES, checkNetwork} from './shared'
 import {validateAccessToken} from "./shared"
+import { refreshTokens } from "./shared"
 
 export default async function middleware(request: NextRequest) {
   const {url} = request
@@ -18,6 +19,11 @@ export default async function middleware(request: NextRequest) {
   const isAuthPage: boolean = url.includes(PAGES.SIGN_UP) || url.includes(PAGES.SIGN_IN)
   const accessToken: string | null = cookies().get('accessToken')?.value || null
   const isTokenValid = await validateAccessToken(accessToken)
+  
+  if (!isTokenValid) { 
+    const isRefreshTokenValid = await refreshTokens()
+    if (isRefreshTokenValid) return NextResponse.next()
+  }    
 
   if (!isAuthPage && !isTokenValid) {
     return NextResponse.redirect(new URL(PAGES.SIGN_UP, url))

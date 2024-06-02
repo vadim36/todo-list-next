@@ -4,35 +4,6 @@ import axios, { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
 import { cookies } from "next/headers";
 import { API_URL, ApiMethods, ApiProps } from "./helpers";
 
-export async function $apiServerExperemental<TRequestBody, TResponse>({
-  method = ApiMethods.GET,
-  path,
-  data,
-  cache = 'default',
-  revalidate = false
-}: ApiProps<TRequestBody>):Promise<TResponse> {
-  const url: string = `${API_URL}${path}`
-  const authHeaders = new Headers({
-    Authorization: `Bearer ${cookies().get('accessToken')?.value}`
-  })
-
-  if (method === ApiMethods.GET) {
-    return await fetch(url, {
-      headers: authHeaders,
-      cache,
-      next: { revalidate }
-    }).then((response) => response.json()).catch(handleError<TResponse>)
-  }
-
-  return await fetch(url, {
-    method,
-    body: JSON.stringify({...data || {}}),
-    headers: authHeaders,
-    cache,
-    next: { revalidate }
-  }).then((response) => response.json()).catch(handleError<TResponse>)
-}
-
 export async function $apiServer<T, R>({
   method = ApiMethods.GET,
   path,

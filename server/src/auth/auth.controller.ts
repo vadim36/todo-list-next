@@ -47,8 +47,14 @@ export class AuthController {
   @ApiResponse({status: 201})
   @UsePipes(ValidationPipe)
   @Post('/refresh')
-  async refresh(@Body() tokenDto: RefreshDto):Promise<AuthDto | never> {
-    return await this.authService.refresh(tokenDto.refreshToken)
+  async refresh(
+    @Body() tokenDto: RefreshDto,
+    @Res({passthrough: true}) response: Response
+  ):Promise<AuthDto | never> {
+    const authData: AuthDto = await this.authService.refresh(tokenDto.refreshToken)
+    response.cookie('accessToken', authData.accessToken, {httpOnly: true})
+    response.cookie('refreshToken', authData.refreshToken, {httpOnly: true})
+    return authData
   }
 
   @ApiOperation({summary: 'Log out a user'})
