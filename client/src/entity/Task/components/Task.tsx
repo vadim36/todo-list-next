@@ -19,6 +19,7 @@ interface Props {
 export function Task({ data, setTasks, tasks }: Props) {
   const {name, body, status, taskId} = data
   const [isEditMode, setIsEditMode] = useState<boolean>(false)
+  const isChecked: boolean = status === Statuses.Completed
 
   async function removeTask() {
     await deleteTask(taskId)
@@ -35,10 +36,18 @@ export function Task({ data, setTasks, tasks }: Props) {
     />
   }
 
+  async function check() {
+    await checkTask(status, taskId)
+    return setTasks([...tasks].map((task: ITask) => {
+      if (task.taskId !== taskId) return task
+      return {...task, status: isChecked ? Statuses.Todo : Statuses.Completed}
+    }))
+  }
+
   return (
     <li className="border border-black p-1 rounded-md flex items-center gap-4 px-4">
-      <Checkbox className="self-center size-6" onClick={() => checkTask(status, taskId)}
-        defaultChecked={status === Statuses.Completed}/>
+      <Checkbox className="self-center size-6" onClick={check}
+        defaultChecked={isChecked}/>
       <article className="flex items-center flex-1 gap-2">
         <div className="flex-1">
           <strong className="text-lg">{name}</strong>

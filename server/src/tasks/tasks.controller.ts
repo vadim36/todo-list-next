@@ -56,6 +56,15 @@ export class TasksController {
     return await this.tasksService.removeTasks(userId)
   }
 
+  @ApiOperation({summary: 'Delete all user`s compelted tasks'})
+  @ApiResponse({status: 201})
+  @UsePipes(ValidationPipe)
+  @UseGuards(AuthGuard)
+  @Delete('/completed/:userId')
+  async removeCompletedTasks(@Param('userId') userId: string) {
+    return await this.tasksService.removeCompletedTasks(userId)
+  }
+
   @ApiOperation({summary: 'Delete a specific user`s task'})
   @ApiResponse({status: 201, type: TaskModel})
   @UsePipes(ValidationPipe)

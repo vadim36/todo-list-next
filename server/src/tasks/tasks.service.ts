@@ -72,6 +72,17 @@ export class TasksService {
     return task
   }
 
+  async removeCompletedTasks(userId: string) {
+    const user = await this.usersService.getUserById(userId)
+    if (!user) throw new UnauthorizedException()
+    const tasks = await this.DBService.task.deleteMany(
+      {where: { userId: user.userId, status: $Enums.Statuses.Completed }}
+    )
+
+    if (!tasks) throw new UnauthorizedException()
+    return 'ok'
+  } 
+
   async removeTasks(userId: string) {
     const user = await this.usersService.getUserById(userId)
     if (!user) throw new UnauthorizedException()

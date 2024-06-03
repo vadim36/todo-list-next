@@ -1,21 +1,19 @@
-"use server"
+"use client"
 
-import { $apiServer, ApiMethods } from "@/shared/http";
+import { $apiClient, ApiMethods } from "@/shared/http";
 import { Statuses, TaskRequest } from "../types";
-import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
 
 export async function checkTask(currentStatus: Statuses, taskId: string) {
+  const userId: string = (JSON.parse(localStorage.getItem('user')!) as UserDto).userId
+
   const updatingData: TaskRequest = { 
     status: currentStatus === Statuses.Todo || currentStatus === Statuses.InProgress 
       ? Statuses.Completed : Statuses.Todo,
-    userId: cookies().get('userId')?.value!,
+    userId,
     taskId
   }
 
-  await $apiServer<TaskRequest, {}>(
+  return await $apiClient<TaskRequest, {}>(
     { path: '/tasks', method: ApiMethods.PUT, data: updatingData}
   )
-
-  return revalidatePath('/')
 }
