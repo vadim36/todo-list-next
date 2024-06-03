@@ -1,6 +1,6 @@
-import { object, string, minLength, maxLength, length } from "valibot";
+import { object, string, minLength, maxLength } from "valibot";
 
-export const CreateTaskSchema = object({
+export const TaskSchema = object({
   name: string('Name must be a string', [
     minLength(3, 'Name must be longer than 3'),
     maxLength(48, 'Name must be less than 48')

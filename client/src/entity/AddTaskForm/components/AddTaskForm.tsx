@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 import { AddTaskButton } from "./AddTaskButton";
-import { PseudoTask } from "./PseudoTask";
+import { PseudoTask } from "@/entity/PseudoTask";
 import { ITask } from "@/entity/Task";
 
 interface Props {

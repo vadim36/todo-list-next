@@ -3,7 +3,7 @@
 import { ITask, Task } from "@/entity/Task"
 import { AddTaskForm } from "@/entity/AddTaskForm"
 import getTasks from "../api/getTasks"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Loader } from "@/shared"
 

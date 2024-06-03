@@ -15,6 +15,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   if (!isNetwork && isNetworkPage) return NextResponse.next()
+  if (isNetwork && isNetworkPage) return NextResponse.redirect(new URL(PAGES.HOME, url))
 
   const isAuthPage: boolean = url.includes(PAGES.SIGN_UP) || url.includes(PAGES.SIGN_IN)
   const accessToken: string | null = cookies().get('accessToken')?.value || null

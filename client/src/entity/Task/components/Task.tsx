@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Trash } from 'lucide-react';
 import { deleteTask } from "../api/deleteTask"
 import { Pen } from 'lucide-react';
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
+import { PseudoTask, PseudoTaskMethods } from "@/entity/PseudoTask"
 
 interface Props {
   data: ITask,
@@ -17,10 +18,21 @@ interface Props {
 
 export function Task({ data, setTasks, tasks }: Props) {
   const {name, body, status, taskId} = data
+  const [isEditMode, setIsEditMode] = useState<boolean>(false)
 
   async function removeTask() {
     await deleteTask(taskId)
     return setTasks(tasks.filter((task: ITask) => task.taskId !== taskId))
+  }
+
+  if (isEditMode) {
+    return <PseudoTask 
+      setIsPseudoTask={setIsEditMode}
+      setTasks={setTasks}
+      tasks={tasks}
+      method={PseudoTaskMethods.UPDATE}
+      taskData={data}
+    />
   }
 
   return (
@@ -32,7 +44,7 @@ export function Task({ data, setTasks, tasks }: Props) {
           <strong className="text-lg">{name}</strong>
           <p className="text-slate-700">{body}</p>
         </div>
-        <Button variant="outline" size="icon" onClick={() => undefined}>
+        <Button variant="outline" size="icon" onClick={() => setIsEditMode(true)}>
           <Pen/>
         </Button>
         <Button variant="destructive" size="icon" onClick={removeTask}>
