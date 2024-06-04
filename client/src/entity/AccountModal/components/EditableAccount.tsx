@@ -8,7 +8,7 @@ import { IUpdatingRequest, IUpdateUser } from "../types"
 import { UpdateUserSchema } from "../lib/validation"
 import { ValiError, parse } from "valibot"
 
-const user: UserDto = JSON.parse(localStorage.getItem('user')!)
+const user: UserDto = JSON.parse(localStorage.getItem('user') || '{}')
 const {userId, name, email} = user
 
 const INITIAL_STATE: IUpdateUser = { name, email }

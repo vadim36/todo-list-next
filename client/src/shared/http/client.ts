@@ -39,14 +39,16 @@ export async function $apiClient<TRequestBody, TResponse>({
 
 async function handleError<TResponse>(error: AxiosError):Promise<AxiosResponse<TResponse>> {
   const originalRequest = error.config
-  let isRetry: boolean = false      
+  let isRetry: boolean = false
 
   if (error.response?.status === 401 && originalRequest && !isRetry) {
+
     isRetry = true
     try {
-      const authData = await axios.post<{}, AuthData>(`${API_URL}/auth/refresh`, {
-        refreshToken: localStorage.getItem('refreshToken')
-      }, { withCredentials: true })
+      const authData = await axios
+        .post<{}, AxiosResponse<AuthData>>(`${API_URL}/auth/refresh`, {
+          refreshToken: localStorage.getItem('refreshToken')
+        }, { withCredentials: true }).then((response) => response.data)
 
       localStorage.setItem('user', JSON.stringify(authData.payload))
       localStorage.setItem('accessToken', authData.accessToken)
